@@ -4,5 +4,8 @@ import './index.css';
 import Game from './Game';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<Game />, document.getElementById('root'));
+ReactDOM.render(
+    <Game challengeSize={6} challengeRange={[2, 9]} />,
+    document.getElementById('root')
+);
 registerServiceWorker();
