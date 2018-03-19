@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './Game.css';
 
 class Number extends Component {
     render() {
@@ -8,7 +8,7 @@ class Number extends Component {
     }
 }
 
-class App extends Component {
+class Game extends Component {
     render() {
         return (
             <div className="game">
@@ -32,4 +32,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default Game;
