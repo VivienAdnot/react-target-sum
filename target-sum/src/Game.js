@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './Game.css';
 // https://lodash.com/docs/4.17.4#sampleSize
 // Gets n random elements from collection
-import { sampleSize } from 'lodash.samplesize';
+import sampleSize from 'lodash.samplesize';
 
 class Number extends Component {
     render() {
@@ -12,10 +12,6 @@ class Number extends Component {
 }
 
 class Game extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     console.log(this.props);
-    // }
 
     challengeNumbers = Array
         .from({length: this.props.challengeSize})
