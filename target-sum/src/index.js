@@ -5,7 +5,11 @@ import Game from './Game';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
-    <Game challengeSize={6} challengeRange={[2, 9]} />,
+    <Game
+        challengeSize={6}
+        challengeRange={[2, 9]}
+        initialSeconds={10}
+    />,
     document.getElementById('root')
 );
 registerServiceWorker();
