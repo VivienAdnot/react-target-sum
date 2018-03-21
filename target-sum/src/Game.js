@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import logo from './logo.svg';
 import './Game.css';
 // https://lodash.com/docs/4.17.4#sampleSize
@@ -11,7 +11,8 @@ const backgroundColors = {
     lost: 'red'
 };
 
-class Number extends Component {
+// PureComponent will re-render only if props have changed
+class Number extends PureComponent {
 
     componentWillUpdate() {
 
