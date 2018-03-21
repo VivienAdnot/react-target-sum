@@ -47,6 +47,8 @@ class Game extends Component {
             this.props.challengeSize - 2 // 2 numbers will be wrong
         ).reduce((accumulator, current) => accumulator + current, 0); // sum
 
+        console.log(`end ctor: ${this.challengeNumbers} | ${this.target} `)
+
     }
 
     //============ triggers ============
@@ -58,12 +60,10 @@ class Game extends Component {
             return;
         }
 
-        const newSelectedIds = [...prevState.selectedIds, numberIndex];
-
         this.setState(
             (prevState) => ({
-                selectedIds: newSelectedIds,
-                gameStatus: this.computeGameStatus(newSelectedIds)
+                selectedIds: [...prevState.selectedIds, numberIndex],
+                gameStatus: this.computeGameStatus([...prevState.selectedIds, numberIndex])
             }),
             // once setState call complete
             () => {
@@ -140,7 +140,7 @@ class Game extends Component {
             <div className="game">
                 <div
                     className="target"
-                    style={{ backgroundColor: backgroundColors[gameStatus]}}
+                    style={{ backgroundColor: backgroundColors[this.state.gameStatus]}}
                 >
                     {this.state.gameStatus === 'new' ? '?' : this.target}
                 </div>
