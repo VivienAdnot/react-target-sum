@@ -5,6 +5,12 @@ import './Game.css';
 // Gets n random elements from collection
 import sampleSize from 'lodash.samplesize';
 
+const backgroundColors = {
+    playing: '#ccc',
+    won: 'green',
+    lost: 'red'
+};
+
 class Number extends Component {
     render() {
         return (
@@ -20,6 +26,30 @@ class Number extends Component {
 }
 
 class Game extends Component {
+
+    constructor(props) {
+
+        super(props);
+
+        this.state = {
+            gameStatus: 'new', // new, playing, won, lost
+            remainingSeconds: this.props.initialSeconds,
+            selectedIds: []
+        };
+
+        this.challengeNumbers = Array
+            .from({length: this.props.challengeSize})
+            .map(() => this.randomNumberBetween(...this.props.challengeRange));
+
+        // sampleSize(collection, n)
+        this.target = sampleSize(
+            this.challengeNumbers,
+            this.props.challengeSize - 2 // 2 numbers will be wrong
+        ).reduce((accumulator, current) => accumulator + current, 0); // sum
+
+    }
+
+    //============ triggers ============
 
     // triggered when we click on a number
     selectNumber = (numberIndex) => {
@@ -48,21 +78,6 @@ class Game extends Component {
         );
 
     };
-
-    computeGameStatus = (selectedIds) => {
-
-        const sumSelected = selectedIds.reduce(
-            (acc, current) => acc + this.challengeNumbers[current],
-            0
-        );
-
-        if (sumSelected < this.target) {
-            return 'playing';
-        }
-
-        return sumSelected === this.target ? 'won' : 'lost'
-
-    }
 
     // triggered when we click on button start
     startGame = () => {
@@ -96,25 +111,26 @@ class Game extends Component {
         });
     };
 
+    //============ helpers ============
+
+    computeGameStatus = (selectedIds) => {
+
+        const sumSelected = selectedIds.reduce(
+            (acc, current) => acc + this.challengeNumbers[current],
+            0
+        );
+
+        if (sumSelected < this.target) {
+            return 'playing';
+        }
+
+        return sumSelected === this.target ? 'won' : 'lost'
+
+    }
+
     // available means not clicked yet
     isNumberAvailable = (numberIndex) =>
         this.state.selectedIds.indexOf(numberIndex) === -1;
-
-    static backgroundColors = {
-        playing: '#ccc',
-        won: 'green',
-        lost: 'red'
-    };
-
-    challengeNumbers = Array
-        .from({length: this.props.challengeSize})
-        .map(() => this.randomNumberBetween(...this.props.challengeRange));
-
-    // sampleSize(collection, n)
-    target = sampleSize(
-        this.challengeNumbers,
-        this.props.challengeSize - 2 // 2 numbers will be wrong
-    ).reduce((accumulator, current) => accumulator + current, 0); // sum
 
     randomNumberBetween = (min, max) =>
         Math.floor(Math.random() * (max - min + 1)) + min;
@@ -124,7 +140,7 @@ class Game extends Component {
             <div className="game">
                 <div
                     className="target"
-                    style={{ backgroundColor: Game.backgroundColors[gameStatus]}}
+                    style={{ backgroundColor: backgroundColors[gameStatus]}}
                 >
                     {this.state.gameStatus === 'new' ? '?' : this.target}
                 </div>
