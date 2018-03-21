@@ -12,12 +12,25 @@ const backgroundColors = {
 };
 
 class Number extends Component {
+
+    componentWillUpdate() {
+
+        console.log(`Number component updated: ${this.props.id}`);
+
+    }
+
     render() {
         return (
             <div
                 className="number"
                 style={{ opacity: this.props.clickable ? 1 : 0.3 }}
-                onClick={() => console.log(this.props.id)}
+                onClick={() => {
+                    if (this.props.clickable) {
+
+                        this.props.onSelected(this.props.id);
+
+                    }
+                }}
             >
                 {this.props.value}
             </div>
@@ -47,37 +60,27 @@ class Game extends Component {
             this.props.challengeSize - 2 // 2 numbers will be wrong
         ).reduce((accumulator, current) => accumulator + current, 0); // sum
 
-        console.log(`end ctor: ${this.challengeNumbers} | ${this.target} `)
+    }
+
+    //============ lifecycle methods ============
+
+    componentDidMount() {
+
+        if (this.props.autoPlay) {
+
+            this.startGame();
+
+        }
+
+    }
+
+    componentWillMount() {
+
+        clearInterval(this.intervalId);
 
     }
 
     //============ triggers ============
-
-    // triggered when we click on a number
-    selectNumber = (numberIndex) => {
-
-        if (this.state.gameStatus !== 'playing') {
-            return;
-        }
-
-        this.setState(
-            (prevState) => ({
-                selectedIds: [...prevState.selectedIds, numberIndex],
-                gameStatus: this.computeGameStatus([...prevState.selectedIds, numberIndex])
-            }),
-            // once setState call complete
-            () => {
-
-                if (this.state.gameStatus !== 'playing') {
-
-                    clearInterval(this.intervalId);
-
-                }
-
-            }
-        );
-
-    };
 
     // triggered when we click on button start
     startGame = () => {
@@ -110,6 +113,33 @@ class Game extends Component {
 
         });
     };
+
+    // triggered when we click on a number
+    selectNumber = (numberIndex) => {
+
+        if (this.state.gameStatus !== 'playing') {
+            return;
+        }
+
+        this.setState(
+            (prevState) => ({
+                selectedIds: [...prevState.selectedIds, numberIndex],
+                gameStatus: this.computeGameStatus([...prevState.selectedIds, numberIndex])
+            }),
+            // once setState call complete
+            () => {
+
+                if (this.state.gameStatus !== 'playing') {
+
+                    clearInterval(this.intervalId);
+
+                }
+
+            }
+        );
+
+    };
+
 
     //============ helpers ============
 
@@ -153,19 +183,22 @@ class Game extends Component {
                             id={index}
                             value={this.state.gameStatus === 'new' ? '?' : value}
                             clickable={this.isNumberAvailable(index)}
+                            onSelected={this.selectNumber}
                         />
                     )}
                 </div>
 
                 <div className="footer">
                     {this.state.gameStatus === 'new' ? (
-                        <button>Start</button>
+                        <button onClick={this.startGame} >Start</button>
                     ) : (
                         <div className="timer-value">{this.state.remainingSeconds}</div>
                     )}
 
                     {['won', 'lost'].includes(this.state.gameStatus) && (
-                        <button>Play Again</button>
+                        <button onClick={this.props.onPlayAgain}>
+                            Play Again
+                        </button>
                     )}
                 </div>
             </div>
